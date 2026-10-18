@@ -1,0 +1,70 @@
+/*
+WHERE sinh ra để chặn những dòng dữ liệu không thỏa mãn điều kiện. 
+Các toán tử cơ bản: =, >, <, >=, <=, và <> (khác).
+*/
+select FruitName, Price
+From fruit
+where Price >= 100000;
+
+-- Mệnh đề có AND và OR;
+SELECT FRUITNAME, PRICE, ORIGIN
+FROM FRUIT
+WHERE PRICE > 100000 AND ORIGIN = N'Hàn Quốc';
+
+SELECT FRUITNAME, PRICE, ORIGIN
+FROM FRUIT
+WHERE PRICE > 100000 or ORIGIN = N'Hàn Quốc';
+
+--Từ Khóa IN và BETWEEN
+--Dùng IN (Lọc theo danh sách):
+--"Tìm trái cây thuộc danh mục số 1, 3 và 4".
+select fruitname, categoryID
+From fruit
+where categoryId in (1, 3, 4);
+
+-- Thay vì viết: Price >= 50000 AND Price <= 150000
+select fruitname, categoryID
+From fruit
+where price between 50000 and 150000;
+
+--Chuỗi Bằng LIKE và cạm bẫy NVARCHAR
+Select fullname, phoneNumber
+from customer
+where fullname like N'Nguyễn%';
+
+Select fullname, phoneNumber
+from customer
+where fullname like N'%Lan%';
+
+/*CẠM BẪY HIỆU NĂNG: 
+Dấu % ở đầu ('%Lan%') sẽ khiến SQL Server bị "mù", 
+nó không thể lật mục lục (Index) ra tra cứu được mà phải quét toàn bộ bảng (Table Scan). 
+Khi thiết kế API tìm kiếm cho hệ thống lớn, 
+hãy cố gắng hướng người dùng tìm kiếm từ trái sang phải ('Lan%').*/
+
+--. Lên Đồ Cho Dữ Liệu Bằng ORDER BY (Sắp Xếp)
+--Lệnh ORDER BY luôn luôn nằm ở CUỐI CÙNG của câu truy vấn.
+--ASC (Ascending): Tăng dần (Từ A-Z, từ nhỏ tới lớn, từ cũ tới mới). Đây là mặc định nếu em không ghi gì.
+--DESC (Descending): Giảm dần (Từ Z-A, từ lớn tới nhỏ, từ mới nhất về cũ nhất).
+
+SELECT OrderID, CustomerID, TotalAmount, OrderDate 
+FROM Orders 
+WHERE Status = N'Đã giao'
+ORDER BY TotalAmount DESC; 
+
+SELECT OrderID, CustomerID, TotalAmount, OrderDate 
+FROM Orders 
+WHERE Status = N'Đã giao'
+ORDER BY TotalAmount Asc; 
+
+--Bài tập
+Select *
+from customer
+
+SELECT FullName, PhoneNumber, RegisterDate
+FROM Customer
+WHERE (FullName LIKE N'Nguyễn%' OR FullName LIKE N'Trần%') 
+  AND Address NOT LIKE N'%TP.HCM%'
+  AND RegisterDate >= '2023-01-01' 
+  AND RegisterDate < '2024-01-01' -- Chặn đúng đêm giao thừa 2023
+ORDER BY RegisterDate DESC;
